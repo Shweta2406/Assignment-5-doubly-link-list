@@ -1,241 +1,283 @@
-#include<stdio.h>
-#include <stdlib.h>
+#include <stdio.h>
+#include<stdlib.h>
 
 struct node
 {
-  int data;
-  struct node* prev;
-  struct node* next;
+    int data;
+    struct node*prv;
+    struct node*next;
 };
+struct node*head=NULL;
 
-void create(struct node * head)
+struct node*getnode();
+void create(int n);
+void display();
+void insert_begin();
+void insert_end();
+void delete_begin();
+void delete_end();
+void insert_p();
+void delete_p();
+struct node* count();
+void reverse();
+
+int main()
 {
-  printf("\nEnter data at start:\n");
-  scanf("%d", &head ->data);
-  head -> next = NULL;
-  head -> prev = NULL;
-}
-
-struct node* insert_start(struct node* head)
-{
-  struct node* temp;
-  int input;
-  temp = (struct node*) malloc (sizeof(struct node));
-  printf("\nEnter data to be inserted at start: ");
-  scanf("%d",&input);
-  temp -> data = input;
-  temp -> prev = NULL;
-  temp -> next = head;
-  head -> prev = temp;
-  head = temp;
-  return head;
-}
-
-void insert_end(struct node* head)
-{
-  struct node *p;
-  int m;
-
-  p = (struct node*) malloc (sizeof(struct node));
-  p = head;
-
-  printf("\nEnter no. of data entries do you want at the end:\t");
-  scanf("%d", &m);
-
-  for(int i=0; i<m; i++)
-  {
-    struct node *temp;
-    int input;
-    temp = (struct node*) malloc (sizeof(struct node)); 
-   
-    printf("\nEnter data to be stored at end:\t");
-    scanf("%d", &input);
-    temp -> data = input;
-    temp -> next = NULL;
+    int ch,n;
+    do{
+    printf("\nenter choice\n1.create\n2.display\n3.insert at beginning\n4.insert at end\n5.delete at beginning\n6.delete at end\n7.insert at given position\n8.delete at given position\n9.Count the length of node\n10.Reverse:");
+    scanf("%d",&ch);
     
-    while(p->next != NULL)
+    switch(ch)
     {
-      p = p -> next;
+        case 1:
+        printf("enter no of nodes:");
+        scanf("%d",&n);
+        create(n);
+        display();
+        break;
+        
+        case 2:
+        display();
+        break;
+        
+        case 3:
+        insert_begin();
+      display();
+        break;
+        
+        case 4:
+        insert_end();
+           display();
+        break;
+        
+        case 5:
+        delete_begin();
+           display();
+        break;
+        
+        case 6:
+       delete_end();
+          display();
+        break;
+        
+        case 7:
+        insert_p();
+        display();
+        break;
+        
+        case 8:
+        delete_p();
+        display();
+        break;
+        
+        case 9:
+        count();
+        break;
+        
+        case 10:
+        reverse();
+        break;
+        
+        
     }
-    temp -> prev = p;
-    p -> next = temp;
-    temp -> next = NULL;
-  }
+    }while(ch);
+    return 0;
 }
 
-void insert_mid(struct node* head)
+struct node*getnode()
 {
-  struct node* p, *q, *temp;
-  int bef, input;
-  temp = (struct node*) malloc (sizeof(struct node)); 
-  p = (struct node*) malloc (sizeof(struct node)); 
-  q = (struct node*) malloc (sizeof(struct node)); 
-  p = head;
-  q = head -> next;
-
-  printf("\nBefore what data do you want to add new data?:\t");
-  scanf("%d", &bef);
-
-  while(q->data != bef)
-  {
-    p = p -> next;
-    q = q -> next;
-  }
-
-  printf("\nEnter data to be added at this position:\t");
-  scanf("%d", &input);
-  temp -> data = input;
-  p -> next = temp;
-  temp -> prev = p;
-  temp -> next = q;
-  q -> prev = temp;
+    struct node*new=(struct node*)malloc(sizeof(struct node));
+    printf("enter data:");
+    scanf("%d",&new->data);
+    new->prv=NULL;
+    new->next=NULL;
+    return new;
 }
 
-struct node* delete_start(struct node* head)
+void create(int n)
 {
-  struct node* p;
-  p=head;
-  head=head->next;
-  head -> prev = NULL;
-  free(p);
-  return head;
+int i;
+struct node *new;
+struct node *temp;
+for(i = 0; i < n; i++)
+{
+new= getnode();
+if(head== NULL)
+{
+head= new;
+}
+else
+{
+temp = head;
+while(temp -> next)
+{
+temp = temp -> next;
+}
+temp -> next = new;
+new-> prv = temp;
+}
+}
 }
 
-void delete_end(struct node* head)
+void display()
 {
-  struct node* p, *q;
-  p = head;
-  q = head -> next;
-
-  while(q->next != NULL)
-  {
-    p = p -> next;
-    q = q -> next;
-  }
-
-  p ->next = NULL;
-  free(q);
-}
-
-void delete_mid(struct node* head)
-{
-  struct node* p, *q;
-  p = head;
-  q = head -> next;
-  int ch;
-
-  printf("\nEnter data to be deleted:\t");
-  scanf("%d", &ch);
-
-  while(q->data != ch)
-  {
-    p = p-> next;
-    q = q-> next;
-  }
-
-  p -> next = q -> next;
-  q -> next -> prev = p;
-  free(q);
-}
-
-void display(struct node *head)
-{
-  struct node* p;
-  p = head;
-  while ( p != NULL)
-  {
-    printf("%d\t", p->data);
-    p = p-> next;
-  }
-}
-
-struct node* reverse(struct node *head)
-{
-  struct node *p, *temp;
-  p = head;
-
-  while(p->next != NULL)
-  {
-    p = p->next;
-  }
-  head = p;
-
-  while(temp!=NULL)
-  {
-    temp = p->prev;
-    p -> prev = p -> next;
-    p -> next = temp;
-    p = temp;
-  }
-  
-  return head;
-}
-
-int main() 
-{
-  int menucheck=1, menucontrol;
-  struct node *head;
-  head= (struct node*) malloc (sizeof(struct node)); 
-  create(head);
-
-  while (menucheck == 1)
-  {
-    printf("\nEnter:\n1.insert at start\n2.insert at end\n3.insert at middle\n4.delete start\n5.delete end\n6.delete at middle\n7. reverse\n8.Exit: \n");
-    scanf("%d", &menucontrol);
-
-    switch(menucontrol)
+    struct node*temp;
+    temp=head;
+    while(temp!=NULL)
     {
-      case(1):
-      head = insert_start(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(2):
-      insert_end(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(3):
-      insert_mid(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(4):
-      head = delete_start(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(5):
-      delete_end(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(6):
-      delete_mid(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(7):
-      head = reverse(head);
-      printf("\n");
-      display(head);
-      break;
-
-      case(8):
-      menucheck = 0;
-      printf("\nProgram Exited successfully.");
-      break;
-
-      default:
-      printf("\nPlease enter valid input.");
-      break;
+        printf("%d\n",temp->data);
+        temp=temp->next;
     }
-  }
-  return 0;
 }
+
+void insert_begin()
+{
+struct node *new;
+new = getnode();
+if(head == NULL)
+head = new;
+else
+{
+new -> next= head;
+head ->prv = new;
+head = new;
+}
+}
+
+void insert_end()
+{
+    struct node*new,*temp;
+    new=getnode();
+    if(head==NULL)
+    head=new;
+    else
+    {
+         temp=head;
+         while(temp->next!=NULL)
+            temp=temp->next;
+            temp->next=new;
+            new->prv=temp;
+         
+    }
+}
+
+void delete_begin()
+{
+    struct node*temp;
+    if(head==NULL)
+   printf("EMPTY");
+    else
+    {
+         temp=head;
+         head=head->next;
+         head->prv=NULL;
+         free(temp);
+    }
+}
+
+void delete_end()
+{
+    struct node*temp;
+    if(head==NULL)
+   printf("EMPTY");
+    else
+    {
+         temp=head;
+         while(temp->next!=NULL)
+            temp=temp->next;
+            temp->prv->next=NULL;
+         free(temp);
+         temp=NULL;
+    }
+}
+
+void insert_p()  
+{  
+     
+   struct node *ptr = (struct node *)malloc(sizeof(struct node));  
+   struct node *temp,*new;   
+   int i, loc;  
+   new=getnode();
+   if(ptr == NULL)  
+   {  
+       printf("\n OVERFLOW");  
+   }  
+   else  
+   {  
+       printf("\nEnter the location\n");  
+       scanf("%d",&loc);  
+       temp=head;  
+       for(i=0;i<loc-2;i++)  
+       {  
+           temp = temp->next;  
+           if(temp == NULL)  
+           {  
+               printf("\ncan't insert\n");  
+               return;  
+           }  
+       }  
+       ptr=new; 
+       ptr->next = temp->next;  
+       ptr -> prv = temp;  
+       temp->next = ptr;  
+       temp->next->prv=ptr;  
+       printf("Node Inserted\n");  
+   }  
+}  
+
+
+void delete_p( )  
+{  
+struct node *temp;
+int i,p;
+ printf("position:");
+    scanf("%d",&p);
+temp = head;
+for(i=0; i<p-1; i++)
+{
+temp = temp->next;
+}
+if(temp != NULL)
+{
+temp->prv->next = temp->next;  
+temp->next->prv = temp->prv;   
+free(temp); 
+}
+else
+{
+printf("Invalid position!\n");
+}}
+
+
+struct node* count()
+ {
+     int count=0;
+     while(head!=NULL)
+     {
+         head=head->next;
+         count++;
+     }
+     printf("\n No of nodes:%d ", count);
+ }
+ 
+ 
+ void reverse()
+{
+struct node *temp;
+temp = head;
+if(head == NULL)
+printf("\nEmpty");
+else
+{
+while(temp -> next != NULL)
+temp = temp -> next;
+}
+while(temp != NULL)
+{
+printf("\t%d", temp -> data);
+temp = temp -> prv;
+}
+}
+
+
